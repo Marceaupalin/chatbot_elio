@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111a2c">
+  <title>Elio — pré-diagnostic robotisation</title>
+  <meta name="description" content="Elio vous dit en quelques questions si un robot de service est pertinent pour votre activité.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Thème choisi par l'utilisateur, appliqué avant l'affichage pour éviter un flash.
+    try {
+      var t = localStorage.getItem("elio-theme");
+      if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2.5" fill="currentColor"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.7 4.7l1.6 1.6M17.7 17.7l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.7 19.3l1.6-1.6M17.7 6.3l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 8.5V6a2.5 2.5 0 0 0-2.5-2.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 7v6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.3 3 8 7 9.5 4-1.5 7-5.2 7-9.5V6l-7-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l5 5v11.5a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 6 19.5v-15A1.5 1.5 0 0 1 7.5 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 3v5h5M9.5 13h5M9.5 16.5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  </svg>
+
+  <div class="app">
+    <aside class="intro" aria-label="Présentation">
+      <div class="intro-top">
+        <img class="brand-logo" id="brandLogo" src="assets/logo_elio_blanc.webp" alt="Elio Robot">
+        <span class="brand-wordmark" id="brandWordmark" hidden>elio</span>
+      </div>
+
+      <div class="intro-body">
+        <div class="mascot-stage">
+          <div class="mascot-wrap" id="mascotWrap">
+            <img class="mascot" id="mascotImg" src="assets/mascot.webp" alt="Elio, la mascotte robot">
+          </div>
+        </div>
+        <p class="eyebrow">Pré-diagnostic gratuit</p>
+        <h1>Votre activité est&#8209;elle robotisable&nbsp;?</h1>
+        <p class="lede">Répondez à cinq questions. Elio vous dit franchement si un robot de service vous serait utile, et lequel. Et quand ce n'est pas le cas, il vous le dit aussi.</p>
+        <ul class="promises">
+          <li><svg aria-hidden="true"><use href="#i-clock"/></svg><span><strong>Environ 3 minutes</strong>, sans rendez-vous</span></li>
+          <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><strong>Aucune donnée personnelle</strong> demandée</span></li>
+          <li><svg aria-hidden="true"><use href="#i-doc"/></svg><span><strong>Un récapitulatif prêt à envoyer</strong> à nos ingénieurs</span></li>
+        </ul>
+      </div>
+
+      <div class="intro-bottom">
+        <a class="human-link" href="https://www.elio-robot.fr/contact" target="_blank" rel="noopener">
+          <svg aria-hidden="true"><use href="#i-person"/></svg>
+          <span class="long">Je préfère parler directement à un ingénieur</span><span class="short">Un ingénieur</span>
+        </a>
+        <p class="disclaimer">Elio est une IA. Son avis est un pré-diagnostic indicatif, confirmé ensuite par une démonstration gratuite sur site. Prototype pédagogique réalisé dans le cadre d'un cours de l'ECE, non affilié à Elio Robot.</p>
+      </div>
+    </aside>
+
+    <main class="chat" aria-label="Conversation avec Elio">
+      <header class="chat-head">
+        <div class="chat-bar">
+          <div class="chat-id">
+            <span class="avatar avatar-lg" data-avatar></span>
+            <div>
+              <p class="chat-name">Elio <span class="online" id="onlineDot" aria-hidden="true"></span></p>
+              <p class="chat-status" id="chatStatus">Pré-diagnostic en cours</p>
+            </div>
+          </div>
+          <div class="head-actions">
+            <button class="icon-btn" id="themeBtn" type="button" aria-label="Passer en mode sombre">
+              <svg class="when-light" aria-hidden="true"><use href="#i-moon"/></svg>
+              <svg class="when-dark" aria-hidden="true"><use href="#i-sun"/></svg>
+            </button>
+            <button class="ghost-btn" id="restartBtn" type="button">
+              <svg aria-hidden="true"><use href="#i-restart"/></svg><span id="restartLabel">Recommencer</span>
+            </button>
+          </div>
+        </div>
+
+        <nav class="route" id="route" aria-label="Progression du pré-diagnostic">
+          <ol class="route-track">
+            <li data-step="1"><span class="node"></span><span class="label">Secteur</span></li>
+            <li data-step="2"><span class="node"></span><span class="label">Tâche</span></li>
+            <li data-step="3"><span class="node"></span><span class="label">Site</span></li>
+            <li data-step="4"><span class="node"></span><span class="label">Enjeu</span></li>
+            <li data-step="5"><span class="node"></span><span class="label">Horizon</span></li>
+            <li data-step="6" class="goal"><span class="node"></span><span class="label">Verdict</span></li>
+          </ol>
+          <span class="robot-marker" id="robotMarker" aria-hidden="true"></span>
+          <p class="route-text" id="routeText">Question 1 sur 5</p>
+        </nav>
+      </header>
+
+      <div class="notice" id="healthNotice" role="status" hidden></div>
+
+      <div class="thread-wrap">
+        <section class="thread" id="thread" aria-live="polite" aria-relevant="additions"></section>
+        <button class="jump-btn" id="jumpBtn" type="button" hidden>
+          <svg aria-hidden="true"><use href="#i-down"/></svg>Dernier message
+        </button>
+      </div>
+
+      <div class="composer-wrap">
+        <form class="composer" id="composer" autocomplete="off">
+          <label class="sr-only" for="input">Votre réponse</label>
+          <textarea id="input" rows="1" maxlength="1500" placeholder="Choisissez une option ou écrivez votre réponse…" enterkeyhint="send"></textarea>
+          <span class="counter" id="counter" hidden></span>
+          <button class="send-btn" id="sendBtn" type="submit" aria-label="Envoyer" disabled>
+            <svg class="i-send" aria-hidden="true"><use href="#i-send"/></svg>
+            <svg class="i-stop" aria-hidden="true"><use href="#i-stop"/></svg>
+          </button>
+        </form>
+        <p class="composer-hint"><kbd>Entrée</kbd> pour envoyer · <kbd>Maj</kbd> + <kbd>Entrée</kbd> pour aller à la ligne · <kbd>1</kbd>…<kbd>7</kbd> pour choisir une option</p>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

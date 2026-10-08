@@ -1,0 +1,7 @@
+# Clé API : ne jamais publier ce fichier
+.env
+
+node_modules/
+public/assets/*.webp
+.DS_Store
+.claude/

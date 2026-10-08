@@ -1,0 +1,13 @@
+{
+  "name": "elio-chatbot",
+  "version": "1.0.0",
+  "description": "Elio, chatbot de pré-diagnostic robotisation (prototype pédagogique ECE)",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
